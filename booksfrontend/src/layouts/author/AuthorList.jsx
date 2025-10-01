@@ -11,7 +11,7 @@ const AuthorList = () => {
   };
 
   const { data } = useSWR("authors", fetcher);
-  if (!data) return <h2>Loading...</h2>;
+  if (!data) return <h2>Login terlebih dahulu</h2>;
 
   const deleteAuthor = async (authorId) => {
     await axios.delete(`http://localhost:5000/authors/${authorId}`);

@@ -11,7 +11,7 @@ const BookList = () => {
   };
 
   const { data } = useSWR("books", fetcher);
-  if (!data) return <h2>Loading...</h2>;
+  if (!data) return <h2>Login terlebih dahulu</h2>;
 
   const deleteBook = async (bookId) => {
     await axios.delete(`http://localhost:5000/books/${bookId}`);

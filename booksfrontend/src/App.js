@@ -12,6 +12,7 @@ import AddAuthor from "./layouts/author/AddAuthor";
 import EditAuthor from "./layouts/author/EditAuthor";
 
 import NavBar from "./components/NavBar";
+import Login from "./auth/Login";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
       <NavBar />
       <div className="container mx-auto p-4">
         <Routes>
+          <Route path="/login" element={<Login />} />
+
           {/* Books */}
           <Route path="/" element={<BookList />} />
           <Route path="/add" element={<AddBook />} />

@@ -11,7 +11,7 @@ const PublisherList = () => {
   };
 
   const { data } = useSWR("publishers", fetcher);
-  if (!data) return <h2>Loading...</h2>;
+  if (!data) return <h2>Login terlebih dahulu</h2>;
 
   const deletePublisher = async (publisherId) => {
     await axios.delete(`http://localhost:5000/publishers/${publisherId}`);

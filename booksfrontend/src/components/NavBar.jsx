@@ -31,6 +31,11 @@ const NavBar = () => {
                 Authors
               </Link>
             </li>
+            <li>
+              <Link to="/login" className={linkClass("/login")}>
+                Login
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
