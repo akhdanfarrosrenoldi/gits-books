@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const AddAuthor = () => {
@@ -11,7 +11,7 @@ const AddAuthor = () => {
   const saveAuthor = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/authors", {
+      await axiosInstance.post("/authors", {
         name: name,
         bio: bio,
       });

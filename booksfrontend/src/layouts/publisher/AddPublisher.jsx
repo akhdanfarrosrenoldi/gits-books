@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const AddPublisher = () => {
@@ -11,7 +11,7 @@ const AddPublisher = () => {
   const savePublisher = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/publishers", {
+      await axiosInstance.post("/publishers", {
         name: name,
         address: address,
       });

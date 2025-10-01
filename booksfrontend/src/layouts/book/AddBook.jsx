@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const AddBook = () => {
@@ -15,14 +15,14 @@ const AddBook = () => {
   // Fetch authors dari API
   useEffect(() => {
     // fetch authors
-    axios
-      .get("http://localhost:5000/authors")
+    axiosInstance
+      .get("/authors")
       .then((res) => setAuthors(res.data))
       .catch((err) => console.error(err));
 
     // fetch publishers
-    axios
-      .get("http://localhost:5000/publishers")
+    axiosInstance
+      .get("/publishers")
       .then((res) => setPublishers(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -30,7 +30,7 @@ const AddBook = () => {
   const saveBook = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/books", {
+      await axiosInstance.post("/books", {
         title: name,
         description,
         publishedYear: Number(publishedYear),

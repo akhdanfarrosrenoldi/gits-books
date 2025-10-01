@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../api/axios";
 import useSWR, { useSWRConfig } from "swr";
 
 const PublisherList = () => {
   const { mutate } = useSWRConfig();
   const fetcher = async () => {
-    const response = await axios.get("http://localhost:5000/publishers");
+    const response = await axiosInstance.get("/publishers");
     return response.data;
   };
 
@@ -14,7 +14,7 @@ const PublisherList = () => {
   if (!data) return <h2>Loading...</h2>;
 
   const deletePublisher = async (publisherId) => {
-    await axios.delete(`http://localhost:5000/publishers/${publisherId}`);
+    await axiosInstance.delete(`/publishers/${publisherId}`);
     mutate("publishers");
   };
 

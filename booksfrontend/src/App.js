@@ -13,6 +13,7 @@ import EditAuthor from "./layouts/author/EditAuthor";
 
 import NavBar from "./components/NavBar";
 import Login from "./auth/Login";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 function App() {
   return (
@@ -23,17 +24,80 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           {/* Books */}
-          <Route path="/" element={<BookList />} />
-          <Route path="/add" element={<AddBook />} />
-          <Route path="/edit/:id" element={<EditBook />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <BookList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add"
+            element={
+              <ProtectedRoute>
+                <AddBook />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit/:id"
+            element={
+              <ProtectedRoute>
+                <EditBook />
+              </ProtectedRoute>
+            }
+          />
 
-          <Route path="/publishers" element={<PublisherList />} />
-          <Route path="/publishers/add" element={<AddPublisher />} />
-          <Route path="/publishers/edit/:id" element={<EditPublisher />} />
+          <Route
+            path="/publishers"
+            element={
+              <ProtectedRoute>
+                <PublisherList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/publishers/add"
+            element={
+              <ProtectedRoute>
+                <AddPublisher />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/publishers/edit/:id"
+            element={
+              <ProtectedRoute>
+                <EditPublisher />
+              </ProtectedRoute>
+            }
+          />
 
-          <Route path="/authors" element={<AuthorList />} />
-          <Route path="/authors/add" element={<AddAuthor />} />
-          <Route path="/authors/edit/:id" element={<EditAuthor />} />
+          <Route
+            path="/authors"
+            element={
+              <ProtectedRoute>
+                <AuthorList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/authors/add"
+            element={
+              <ProtectedRoute>
+                <AddAuthor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/authors/edit/:id"
+            element={
+              <ProtectedRoute>
+                <EditAuthor />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </BrowserRouter>

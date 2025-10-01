@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -17,7 +17,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", {
+      const response = await axiosInstance.post("/auth/login", {
         email,
         password,
       });

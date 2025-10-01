@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EditPublisher = () => {
@@ -11,9 +11,7 @@ const EditPublisher = () => {
 
   useEffect(() => {
     const getPublisherById = async () => {
-      const response = await axios.get(
-        `http://localhost:5000/publishers/${id}`
-      );
+      const response = await axiosInstance.get(`/publishers/${id}`);
       setName(response.data.name);
       setAddress(response.data.address);
     };
@@ -23,8 +21,8 @@ const EditPublisher = () => {
   const updatePublisher = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/publishers/${id}`, {
-        title: name,
+      await axiosInstance.patch(`/publishers/${id}`, {
+        name: name,
         address: address,
       });
       navigate("/publishers");

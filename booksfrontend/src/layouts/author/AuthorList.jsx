@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../api/axios";
 import useSWR, { useSWRConfig } from "swr";
 
 const AuthorList = () => {
   const { mutate } = useSWRConfig();
   const fetcher = async () => {
-    const response = await axios.get("http://localhost:5000/authors");
+    const response = await axiosInstance.get("/authors");
     return response.data;
   };
 
@@ -14,7 +14,7 @@ const AuthorList = () => {
   if (!data) return <h2>Loading...</h2>;
 
   const deleteAuthor = async (authorId) => {
-    await axios.delete(`http://localhost:5000/authors/${authorId}`);
+    await axiosInstance.delete(`/authors/${authorId}`);
     mutate("authors");
   };
 

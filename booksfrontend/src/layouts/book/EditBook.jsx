@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EditBook = () => {
@@ -15,7 +15,7 @@ const EditBook = () => {
 
   useEffect(() => {
     const getBookById = async () => {
-      const response = await axios.get(`http://localhost:5000/books/${id}`);
+      const response = await axiosInstance.get(`/books/${id}`);
       setName(response.data.title);
       setDescription(response.data.description);
       setPublishedYear(response.data.publishedYear);
@@ -28,14 +28,14 @@ const EditBook = () => {
   // Fetch authors dari API
   useEffect(() => {
     // fetch authors
-    axios
-      .get("http://localhost:5000/authors")
+    axiosInstance
+      .get("/authors")
       .then((res) => setAuthors(res.data))
       .catch((err) => console.error(err));
 
     // fetch publishers
-    axios
-      .get("http://localhost:5000/publishers")
+    axiosInstance
+      .get("/publishers")
       .then((res) => setPublishers(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -43,7 +43,7 @@ const EditBook = () => {
   const updateBook = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/books/${id}`, {
+      await axiosInstance.patch(`/books/${id}`, {
         title: name,
         description,
         publishedYear: Number(publishedYear),

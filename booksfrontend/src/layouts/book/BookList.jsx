@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../api/axios";
 import useSWR, { useSWRConfig } from "swr";
 
 const BookList = () => {
   const { mutate } = useSWRConfig();
   const fetcher = async () => {
-    const response = await axios.get("http://localhost:5000/books");
+    const response = await axiosInstance.get("/books");
     return response.data;
   };
 
@@ -14,7 +14,7 @@ const BookList = () => {
   if (!data) return <h2>Loading...</h2>;
 
   const deleteBook = async (bookId) => {
-    await axios.delete(`http://localhost:5000/books/${bookId}`);
+    await axiosInstance.delete(`/books/${bookId}`);
     mutate("books");
   };
 

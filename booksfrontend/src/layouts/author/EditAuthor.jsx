@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EditAuthor = () => {
@@ -11,7 +11,7 @@ const EditAuthor = () => {
 
   useEffect(() => {
     const getAuthorById = async () => {
-      const response = await axios.get(`http://localhost:5000/authors/${id}`);
+      const response = await axiosInstance.get(`/authors/${id}`);
       setName(response.data.name);
       setBio(response.data.bio);
     };
@@ -21,7 +21,7 @@ const EditAuthor = () => {
   const updateAuthor = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/authors/${id}`, {
+      await axiosInstance.patch(`/authors/${id}`, {
         name: name,
         bio: bio,
       });
