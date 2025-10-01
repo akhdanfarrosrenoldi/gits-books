@@ -1,4 +1,5 @@
 import express from "express";
+import { authenticate } from "../middleware/auth.js";
 import {
   getBooks,
   getBookById,
@@ -8,6 +9,8 @@ import {
 } from "../controllers/BookController.js";
 
 const router = express.Router();
+
+router.use(authenticate);
 
 router.get("/", getBooks);
 router.get("/:id", getBookById);

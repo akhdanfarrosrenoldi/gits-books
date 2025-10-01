@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import BookRoute from "./routes/BookRoute.js";
 import AuthorRoute from "./routes/AuthorRoute.js";
 import PublisherRoute from "./routes/PublisherRoute.js";
+import AuthRoute from "./routes/AuthRoute.js";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // routes
+app.use("/auth", AuthRoute);
 app.use("/books", BookRoute);
 app.use("/authors", AuthorRoute);
 app.use("/publishers", PublisherRoute);
