@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.use(authenticate);
+// router.use(authenticate);
 
 router.get("/", getPublishers);
 router.get("/:id", getPublisherById);
