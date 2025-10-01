@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-// ✅ Get all authors (include books)
 export const getAuthors = async (req, res) => {
   try {
     const response = await prisma.author.findMany({
@@ -15,7 +14,7 @@ export const getAuthors = async (req, res) => {
   }
 };
 
-// ✅ Get author by ID
+// Get author by ID
 export const getAuthorById = async (req, res) => {
   try {
     const response = await prisma.author.findUnique({
@@ -35,7 +34,7 @@ export const getAuthorById = async (req, res) => {
   }
 };
 
-// ✅ Create new author
+// Create new author
 export const createAuthor = async (req, res) => {
   try {
     const { name, bio } = req.body;
@@ -53,7 +52,7 @@ export const createAuthor = async (req, res) => {
   }
 };
 
-// ✅ Update author
+// Update author
 export const updateAuthor = async (req, res) => {
   try {
     const { name, bio } = req.body;
@@ -69,7 +68,7 @@ export const updateAuthor = async (req, res) => {
   }
 };
 
-// ✅ Delete author
+// Delete author
 export const deleteAuthor = async (req, res) => {
   try {
     await prisma.author.delete({

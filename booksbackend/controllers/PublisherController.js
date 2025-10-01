@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-// ✅ Get all publishers (include books)
+// Get all publishers (include books)
 export const getPublishers = async (req, res) => {
   try {
     const response = await prisma.publisher.findMany({
@@ -15,7 +15,7 @@ export const getPublishers = async (req, res) => {
   }
 };
 
-// ✅ Get publisher by ID
+// Get publisher by ID
 export const getPublisherById = async (req, res) => {
   try {
     const response = await prisma.publisher.findUnique({
@@ -35,7 +35,7 @@ export const getPublisherById = async (req, res) => {
   }
 };
 
-// ✅ Create new publisher
+// Create new publisher
 export const createPublisher = async (req, res) => {
   try {
     const { name, address } = req.body;
@@ -53,7 +53,7 @@ export const createPublisher = async (req, res) => {
   }
 };
 
-// ✅ Update publisher
+// Update publisher
 export const updatePublisher = async (req, res) => {
   try {
     const { name, address } = req.body;
@@ -69,7 +69,7 @@ export const updatePublisher = async (req, res) => {
   }
 };
 
-// ✅ Delete publisher
+// Delete publisher
 export const deletePublisher = async (req, res) => {
   try {
     await prisma.publisher.delete({
