@@ -6,7 +6,7 @@ import useSWR, { useSWRConfig } from "swr";
 const BookList = () => {
   const { mutate } = useSWRConfig();
   const [page, setPage] = useState(1);
-  const limit = 10;
+  const limit = 5;
   const fetcher = async (url) => {
     const response = await axiosInstance.get(url);
     return response.data;
