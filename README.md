@@ -223,7 +223,7 @@ gits-books/
 
 5. **Start the server**
    ```bash
-   npm start
+   nodemon index
    ```
    Server will run on `http://localhost:5000`
 
