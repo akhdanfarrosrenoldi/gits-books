@@ -108,25 +108,39 @@ gits-books/
 │   ├── 📁 src/
 │   │   ├── 📁 components/            # Reusable UI components
 │   │   │   ├── SearchFilter.jsx      # Advanced search & filter component
-│   │   │   └── Pagination.jsx        # Reusable pagination component
+│   │   │   ├── Pagination.jsx        # Reusable pagination component
+│   │   │   └── NavBar.jsx            # Global navigation component
 │   │   ├── 📁 hooks/                 # Custom React hooks
 │   │   │   └── useDebounce.js        # Debounced search hook (800ms)
 │   │   ├── 📁 layouts/               # Page layouts & containers
 │   │   │   ├── 📁 book/              # Books management pages
 │   │   │   │   ├── BookList.jsx      # Books listing with search/filter
-│   │   │   │   ├── BookAdd.jsx       # Add new book form
-│   │   │   │   └── BookEdit.jsx      # Edit book form
+│   │   │   │   ├── AddBook.jsx       # Add new book form
+│   │   │   │   └── EditBook.jsx      # Edit book form
 │   │   │   ├── 📁 author/            # Authors management pages
 │   │   │   │   ├── AuthorList.jsx    # Authors listing with search
-│   │   │   │   ├── AuthorAdd.jsx     # Add new author form
-│   │   │   │   └── AuthorEdit.jsx    # Edit author form
+│   │   │   │   ├── AddAuthor.jsx     # Add new author form
+│   │   │   │   └── EditAuthor.jsx    # Edit author form
 │   │   │   └── 📁 publisher/         # Publishers management pages
 │   │   │       ├── PublisherList.jsx # Publishers listing with search
-│   │   │       ├── PublisherAdd.jsx  # Add new publisher form
-│   │   │       └── PublisherEdit.jsx # Edit publisher form
+│   │   │       ├── AddPublisher.jsx  # Add new publisher form
+│   │   │       └── EditPublisher.jsx # Edit publisher form
+│   │   ├── 📁 routes/                # Modular route configuration
+│   │   │   ├── index.js              # Central route exports
+│   │   │   ├── AppRoutes.jsx         # Main routes component
+│   │   │   ├── authRoutes.js         # Authentication routes
+│   │   │   ├── bookRoutes.js         # Books CRUD routes
+│   │   │   ├── authorRoutes.js       # Authors CRUD routes
+│   │   │   └── publisherRoutes.js    # Publishers CRUD routes
+│   │   ├── 📁 auth/                  # Authentication components
+│   │   │   ├── Login.jsx             # Login form component
+│   │   │   ├── ProtectedRoute.jsx    # Route protection wrapper
+│   │   │   └── AuthRoute.jsx         # Auth-only route wrapper
+│   │   ├── 📁 context/               # React Context providers
+│   │   │   └── AuthContext.js        # Authentication context
 │   │   ├── 📁 api/                   # API configuration
 │   │   │   └── axios.js              # Axios instance with interceptors
-│   │   ├── App.js                    # Main app component
+│   │   ├── App.js                    # Main app component (refactored)
 │   │   └── index.js                  # React entry point
 │   ├── package.json                  # Frontend dependencies
 │   └── tailwind.config.js            # Tailwind CSS configuration
@@ -150,15 +164,15 @@ gits-books/
 - **Robust Error Handling** - Prisma/MySQL specific errors
 
 #### **Frontend (React.js + SWR + Tailwind)**
-
-- **Component-Based Architecture** - Reusable UI components
+- **Component-Based Architecture** - Reusable UI components (SearchFilter, Pagination)
+- **Modular Route Management** - Organized routes by feature modules
 - **Smart Data Fetching** - SWR with caching & optimistic updates
 - **Advanced Search & Filter** - Debounced search with real-time filtering
+- **Authentication System** - Context-based auth with route protection
 - **Responsive Design** - Mobile-first approach with Tailwind CSS
 - **Optimized Performance** - Memoization, pagination, smooth UX
 
 #### **Documentation & Security**
-
 - **Complete API Documentation** - All endpoints documented
 - **Secure Postman Collection** - Environment variables, no hardcoded secrets
 - **Security Guidelines** - Production deployment checklist
