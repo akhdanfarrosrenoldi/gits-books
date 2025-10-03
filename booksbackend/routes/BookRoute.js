@@ -7,6 +7,11 @@ import {
   updateBook,
   deleteBook,
 } from "../controllers/BookController.js";
+import validateRequest from "../middleware/validateRequest.js";
+import {
+  createBookSchema,
+  updateBookSchema,
+} from "../validations/bookValidation.js";
 
 const router = express.Router();
 
@@ -14,8 +19,8 @@ router.use(authenticate);
 
 router.get("/", getBooks);
 router.get("/:id", getBookById);
-router.post("/", createBook);
-router.patch("/:id", updateBook);
+router.post("/", validateRequest(createBookSchema), createBook);
+router.patch("/:id", validateRequest(updateBookSchema), updateBook);
 router.delete("/:id", deleteBook);
 
 export default router;

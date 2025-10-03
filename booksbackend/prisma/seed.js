@@ -13,7 +13,7 @@ async function main() {
       username: "admin",
       email: "admin@example.com",
       passwordHash,
-      role: "admin",
+      role: "ADMIN",
     },
   });
 
