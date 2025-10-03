@@ -27,7 +27,7 @@ const BookList = () => {
   return (
     <div className="relative overflow-x-auto sm:rounded-lg">
       <Link
-        to="/add"
+        to="/book/add"
         className="inline-block text-gray-900 bg-white border border-gray-300 focus:outline-none 
           hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
       >
@@ -60,7 +60,7 @@ const BookList = () => {
               <td className="px-6 py-4">{book.publisher.name}</td>
               <td className="px-6 py-4">
                 <Link
-                  to={`/edit/${book.id}`}
+                  to={`/book/edit/${book.id}`}
                   className="font-medium bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded mr-1"
                 >
                   Edit

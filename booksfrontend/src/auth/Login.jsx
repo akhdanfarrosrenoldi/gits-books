@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import axiosInstance from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(""); // Reset error message
 
     if (!email || !password) {
       setError("Email dan password harus diisi!");
@@ -17,22 +17,12 @@ const Login = () => {
     }
 
     try {
-      const response = await axiosInstance.post("/auth/login", {
-        email,
-        password,
-      });
-
-      // Simpan token di localStorage
-      localStorage.setItem("token", response.data.token);
-
-      // Redirect ke halaman utama
-      navigate("/");
+      await login(email, password); // AuthContext menangani redirect & state
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.msg || "Login gagal");
     }
   };
-
   return (
     <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>

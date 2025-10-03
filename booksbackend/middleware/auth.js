@@ -3,10 +3,7 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET || "secretkey123";
 
 export const authenticate = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ msg: "Anda belum login" });
-
-  const token = authHeader.split(" ")[1];
+  const token = req.cookies.token;
   if (!token) return res.status(401).json({ msg: "Anda belum login" });
 
   try {

@@ -1,13 +1,16 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const NavBar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem("token");
+  const { isAuthenticated, logout } = useAuth();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logout(); // AuthContext akan handle redirect
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   const linkClass = (path) =>
@@ -23,10 +26,10 @@ const NavBar = () => {
         </span>
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            {isLoggedIn ? (
+            {isAuthenticated ? (
               <>
                 <li>
-                  <Link to="/" className={linkClass("/")}>
+                  <Link to="/books" className={linkClass("/books")}>
                     Books
                   </Link>
                 </li>
@@ -51,7 +54,7 @@ const NavBar = () => {
               </>
             ) : (
               <li>
-                <Link to="/login" className={linkClass("/login")}>
+                <Link to="/" className={linkClass("/")}>
                   Login
                 </Link>
               </li>

@@ -30,13 +30,13 @@ const EditBook = () => {
     // fetch authors
     axiosInstance
       .get("/authors")
-      .then((res) => setAuthors(res.data))
+      .then((res) => setAuthors(res.data.data))
       .catch((err) => console.error(err));
 
     // fetch publishers
     axiosInstance
       .get("/publishers")
-      .then((res) => setPublishers(res.data))
+      .then((res) => setPublishers(res.data.data))
       .catch((err) => console.error(err));
   }, []);
 

@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 export const getAuthors = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 30;
     const skip = (page - 1) * limit;
 
     const [authors, totalItems] = await Promise.all([
