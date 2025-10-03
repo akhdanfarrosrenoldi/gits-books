@@ -26,8 +26,8 @@ const EditPublisher = () => {
       try {
         const response = await axiosInstance.get(`/publishers/${id}`);
         setInitialValues({
-          name: response.data.name,
-          address: response.data.address,
+          name: response.data.data.name,
+          address: response.data.data.address,
         });
       } catch (error) {
         navigate("/publishers");

@@ -23,7 +23,8 @@ const AddAuthor = () => {
       await axiosInstance.post("/authors", values);
       navigate("/authors");
     } catch (error) {
-      setStatus({ error: error.message || "Failed to add author" });
+      const errorMessage = error.response?.data?.message || error.message || "Failed to add author";
+      setStatus({ error: errorMessage });
     } finally {
       setSubmitting(false);
     }

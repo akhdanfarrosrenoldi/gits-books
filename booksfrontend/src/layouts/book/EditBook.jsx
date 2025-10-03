@@ -50,11 +50,11 @@ const EditBook = () => {
           ]);
 
         setInitialValues({
-          title: bookResponse.data.title,
-          description: bookResponse.data.description,
-          publishedYear: bookResponse.data.publishedYear,
-          authorId: bookResponse.data.authorId,
-          publisherId: bookResponse.data.publisherId,
+          title: bookResponse.data.data.title,
+          description: bookResponse.data.data.description,
+          publishedYear: bookResponse.data.data.publishedYear,
+          authorId: bookResponse.data.data.authorId,
+          publisherId: bookResponse.data.data.publisherId,
         });
         setAuthors(authorsResponse.data.data);
         setPublishers(publishersResponse.data.data);

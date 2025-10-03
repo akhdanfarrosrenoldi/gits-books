@@ -26,8 +26,8 @@ const EditAuthor = () => {
       try {
         const response = await axiosInstance.get(`/authors/${id}`);
         setInitialValues({
-          name: response.data.name,
-          bio: response.data.bio,
+          name: response.data.data.name,
+          bio: response.data.data.bio,
         });
       } catch (error) {
         navigate("/authors");
