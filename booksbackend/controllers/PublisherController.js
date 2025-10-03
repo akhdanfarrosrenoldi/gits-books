@@ -1,15 +1,36 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-// Get all publishers (include books)
+// Get all publishers with pagination
 export const getPublishers = async (req, res) => {
   try {
-    const response = await prisma.publisher.findMany({
-      include: {
-        books: true, // karena 1 publisher punya banyak buku
+    // ambil query params ?page=1&limit=5
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
+    const [publishers, totalItems] = await Promise.all([
+      prisma.publisher.findMany({
+        skip,
+        take: limit,
+        include: {
+          books: true,
+        },
+      }),
+      prisma.publisher.count(), // total data publisher
+    ]);
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    res.status(200).json({
+      data: publishers,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: page,
+        perPage: limit,
       },
     });
-    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }

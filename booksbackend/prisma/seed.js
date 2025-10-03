@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   // --- Seed User ---
   const passwordHash = await bcrypt.hash("admin123", 10);
-  const admin = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: "admin@example.com" },
     update: {},
     create: {
@@ -17,58 +17,48 @@ async function main() {
     },
   });
 
-  // --- Seed Authors ---
-  const author1 = await prisma.author.create({
-    data: {
-      name: "J.K. Rowling",
-      bio: "Author of the Harry Potter series",
-    },
-  });
+  // --- Seed Authors (20) ---
+  const authors = [];
+  for (let i = 1; i <= 20; i++) {
+    const author = await prisma.author.create({
+      data: {
+        name: `Author ${i}`,
+        bio: `Bio for author ${i}`,
+      },
+    });
+    authors.push(author);
+  }
 
-  const author2 = await prisma.author.create({
-    data: {
-      name: "George R.R. Martin",
-      bio: "Author of A Song of Ice and Fire",
-    },
-  });
+  // --- Seed Publishers (15) ---
+  const publishers = [];
+  for (let i = 1; i <= 15; i++) {
+    const publisher = await prisma.publisher.create({
+      data: {
+        name: `Publisher ${i}`,
+        address: `Address ${i}`,
+      },
+    });
+    publishers.push(publisher);
+  }
 
-  // --- Seed Publishers ---
-  const publisher1 = await prisma.publisher.create({
-    data: {
-      name: "Bloomsbury",
-      address: "London, UK",
-    },
-  });
+  // --- Seed Books (30) ---
+  for (let i = 1; i <= 30; i++) {
+    const randomAuthor = authors[Math.floor(Math.random() * authors.length)];
+    const randomPublisher =
+      publishers[Math.floor(Math.random() * publishers.length)];
 
-  const publisher2 = await prisma.publisher.create({
-    data: {
-      name: "Bantam Books",
-      address: "New York, USA",
-    },
-  });
+    await prisma.book.create({
+      data: {
+        title: `Book ${i}`,
+        description: `Description for book ${i}`,
+        publishedYear: 1990 + Math.floor(Math.random() * 35), // tahun random 1990-2024
+        authorId: randomAuthor.id,
+        publisherId: randomPublisher.id,
+      },
+    });
+  }
 
-  // --- Seed Books ---
-  await prisma.book.create({
-    data: {
-      title: "Harry Potter and the Philosopher's Stone",
-      description: "First book in the Harry Potter series",
-      publishedYear: 1997,
-      authorId: author1.id,
-      publisherId: publisher1.id,
-    },
-  });
-
-  await prisma.book.create({
-    data: {
-      title: "A Game of Thrones",
-      description: "First book in A Song of Ice and Fire",
-      publishedYear: 1996,
-      authorId: author2.id,
-      publisherId: publisher2.id,
-    },
-  });
-
-  console.log("Seeding done!");
+  console.log("✅ Seeding done!");
 }
 
 main()

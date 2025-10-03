@@ -1,14 +1,40 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+// Get all authors with pagination
 export const getAuthors = async (req, res) => {
   try {
-    const response = await prisma.author.findMany({
-      include: {
-        books: true, // karena 1 author bisa punya banyak buku
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const [authors, totalItems] = await Promise.all([
+      prisma.author.findMany({
+        skip,
+        take: limit,
+        include: {
+          books: true,
+        },
+        orderBy: { id: "asc" },
+      }),
+      prisma.author.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    if (page > totalPages && totalItems > 0) {
+      return res.status(404).json({ msg: "This page does not exist" });
+    }
+
+    res.status(200).json({
+      data: authors,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: page,
+        perPage: limit,
       },
     });
-    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
