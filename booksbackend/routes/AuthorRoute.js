@@ -15,8 +15,10 @@ import {
 
 const router = express.Router();
 
+// Apply authentication to all author routes
 router.use(authenticate);
 
+// Author routes with validation
 router.get("/", getAuthors);
 router.get("/:id", getAuthorById);
 router.post("/", validateRequest(createAuthorSchema), createAuthor);

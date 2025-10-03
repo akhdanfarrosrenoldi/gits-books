@@ -1,1 +1,380 @@
-GET http://localhost:5000/books
+### ===========================================
+### GITS BOOKS API - REST CLIENT EXAMPLES
+### ===========================================
+
+@baseUrl = http://localhost:5000
+@contentType = application/json
+
+### ===========================================
+### HEALTH CHECK
+### ===========================================
+
+### Health Check
+GET {{baseUrl}}/health
+
+### ===========================================
+### AUTHENTICATION
+### ===========================================
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Get Current User Profile
+GET {{baseUrl}}/auth/me
+
+### Logout
+POST {{baseUrl}}/auth/logout
+
+### ===========================================
+### BOOKS API
+### ===========================================
+
+### Get All Books (Basic)
+GET {{baseUrl}}/books
+
+### Get Books with Pagination
+GET {{baseUrl}}/books?page=1&limit=5
+
+### Get Books with Search
+GET {{baseUrl}}/books?search=harry
+
+### Get Books with Filter by Author
+GET {{baseUrl}}/books?authorId=1
+
+### Get Books with Filter by Publisher
+GET {{baseUrl}}/books?publisherId=1
+
+### Get Books with Year Range Filter
+GET {{baseUrl}}/books?publishedYear=2000,2020
+
+### Get Books with Sorting
+GET {{baseUrl}}/books?sortBy=title&sortOrder=asc
+
+### Get Books with Combined Query
+GET {{baseUrl}}/books?page=1&limit=10&search=programming&sortBy=publishedYear&sortOrder=desc&authorId=1
+
+### Get Book by ID
+GET {{baseUrl}}/books/1
+
+### Create New Book
+POST {{baseUrl}}/books
+Content-Type: {{contentType}}
+
+{
+  "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+  "description": "A comprehensive guide to writing clean, maintainable code",
+  "publishedYear": 2008,
+  "authorId": 1,
+  "publisherId": 1
+}
+
+### Update Book
+PATCH {{baseUrl}}/books/1
+Content-Type: {{contentType}}
+
+{
+  "title": "Clean Code: Updated Edition",
+  "description": "Updated comprehensive guide to writing clean, maintainable code",
+  "publishedYear": 2009
+}
+
+### Delete Book
+DELETE {{baseUrl}}/books/1
+
+### ===========================================
+### AUTHORS API
+### ===========================================
+
+### Get All Authors (Basic)
+GET {{baseUrl}}/authors
+
+### Get Authors with Pagination
+GET {{baseUrl}}/authors?page=1&limit=5
+
+### Get Authors with Search
+GET {{baseUrl}}/authors?search=robert
+
+### Get Authors with Sorting
+GET {{baseUrl}}/authors?sortBy=name&sortOrder=asc
+
+### Get Authors with Combined Query
+GET {{baseUrl}}/authors?page=1&limit=10&search=martin&sortBy=createdAt&sortOrder=desc
+
+### Get Author by ID
+GET {{baseUrl}}/authors/1
+
+### Create New Author
+POST {{baseUrl}}/authors
+Content-Type: {{contentType}}
+
+{
+  "name": "Robert C. Martin",
+  "bio": "Software engineer, author, and speaker known for his work on software design principles and clean code practices."
+}
+
+### Update Author
+PATCH {{baseUrl}}/authors/1
+Content-Type: {{contentType}}
+
+{
+  "name": "Robert Cecil Martin",
+  "bio": "Updated bio: Software engineer, author, and speaker known for his work on software design principles, clean code practices, and agile development."
+}
+
+### Delete Author
+DELETE {{baseUrl}}/authors/1
+
+### ===========================================
+### PUBLISHERS API
+### ===========================================
+
+### Get All Publishers (Basic)
+GET {{baseUrl}}/publishers
+
+### Get Publishers with Pagination
+GET {{baseUrl}}/publishers?page=1&limit=5
+
+### Get Publishers with Search
+GET {{baseUrl}}/publishers?search=prentice
+
+### Get Publishers with Address Filter
+GET {{baseUrl}}/publishers?address=new york
+
+### Get Publishers with Sorting
+GET {{baseUrl}}/publishers?sortBy=name&sortOrder=asc
+
+### Get Publishers with Combined Query
+GET {{baseUrl}}/publishers?page=1&limit=10&search=hall&sortBy=createdAt&sortOrder=desc
+
+### Get Publisher by ID
+GET {{baseUrl}}/publishers/1
+
+### Create New Publisher
+POST {{baseUrl}}/publishers
+Content-Type: {{contentType}}
+
+{
+  "name": "Prentice Hall",
+  "address": "Upper Saddle River, New Jersey, USA"
+}
+
+### Update Publisher
+PATCH {{baseUrl}}/publishers/1
+Content-Type: {{contentType}}
+
+{
+  "name": "Prentice Hall International",
+  "address": "Upper Saddle River, New Jersey, USA - Updated Address"
+}
+
+### Delete Publisher
+DELETE {{baseUrl}}/publishers/1
+
+### ===========================================
+### ERROR TESTING
+### ===========================================
+
+### Test 404 - Invalid Route
+GET {{baseUrl}}/invalid-route
+
+### Test 400 - Invalid Book ID
+GET {{baseUrl}}/books/invalid-id
+
+### Test 404 - Non-existent Book
+GET {{baseUrl}}/books/99999
+
+### Test 401 - Unauthorized Access (without login)
+GET {{baseUrl}}/books
+# Note: This will work if you're not logged in
+
+### Test 409 - Duplicate Author Name
+POST {{baseUrl}}/authors
+Content-Type: {{contentType}}
+
+{
+  "name": "Robert C. Martin",
+  "bio": "Duplicate author test"
+}
+
+### Test Validation Error - Missing Required Fields
+POST {{baseUrl}}/books
+Content-Type: {{contentType}}
+
+{
+  "title": "",
+  "publishedYear": "invalid-year"
+}
+
+### ===========================================
+### ADVANCED TESTING SCENARIOS
+### ===========================================
+
+### Test Complex Book Query with All Parameters
+GET {{baseUrl}}/books?page=1&limit=5&search=clean&sortBy=publishedYear&sortOrder=desc&authorId=1&publisherId=1&publishedYear=2000,2025
+
+### Test Books Pagination Edge Cases
+GET {{baseUrl}}/books?page=999&limit=1
+
+### Test Invalid Sort Parameters
+GET {{baseUrl}}/books?sortBy=invalid_field&sortOrder=invalid_order
+
+### Test Large Limit
+GET {{baseUrl}}/books?limit=1000
+
+### Test Zero and Negative Values
+GET {{baseUrl}}/books?page=0&limit=-5
+
+### Test Special Characters in Search
+GET {{baseUrl}}/books?search=C++%20Programming
+
+### Test Empty Search
+GET {{baseUrl}}/books?search=
+
+### Test Multiple Authors with Same Name (Edge Case)
+POST {{baseUrl}}/authors
+Content-Type: {{contentType}}
+
+{
+  "name": "John Smith",
+  "bio": "First John Smith author"
+}
+
+###
+POST {{baseUrl}}/authors
+Content-Type: {{contentType}}
+
+{
+  "name": "John Smith",
+  "bio": "Second John Smith author - should fail due to unique constraint"
+}
+
+### Test Book Creation with Non-existent Author/Publisher
+POST {{baseUrl}}/books
+Content-Type: {{contentType}}
+
+{
+  "title": "Test Book with Invalid Relations",
+  "description": "This should fail",
+  "publishedYear": 2024,
+  "authorId": 99999,
+  "publisherId": 99999
+}
+
+### Test Partial Update with Invalid Data
+PATCH {{baseUrl}}/books/1
+Content-Type: {{contentType}}
+
+{
+  "publishedYear": "not-a-number",
+  "authorId": "not-a-number"
+}
+
+### ===========================================
+### PERFORMANCE TESTING
+### ===========================================
+
+### Test Concurrent Requests (Run multiple times)
+GET {{baseUrl}}/books?limit=50
+
+### Test Large Dataset Query
+GET {{baseUrl}}/books?search=a&limit=100
+
+### ===========================================
+### SECURITY TESTING
+### ===========================================
+
+### Test SQL Injection Attempt in Search
+GET {{baseUrl}}/books?search='; DROP TABLE books; --
+
+### Test XSS Attempt in Book Creation
+POST {{baseUrl}}/books
+Content-Type: {{contentType}}
+
+{
+  "title": "<script>alert('XSS')</script>",
+  "description": "<img src=x onerror=alert('XSS')>",
+  "publishedYear": 2024,
+  "authorId": 1,
+  "publisherId": 1
+}
+
+### Test Very Long Input
+POST {{baseUrl}}/books
+Content-Type: {{contentType}}
+
+{
+  "title": "A".repeat(1000),
+  "description": "Very long description that exceeds normal limits...",
+  "publishedYear": 2024,
+  "authorId": 1,
+  "publisherId": 1
+}
+
+### ===========================================
+### QUERY PARAMETERS REFERENCE
+### ===========================================
+
+# Common Query Parameters:
+# - page: Page number (default: 1)
+# - limit: Items per page (default: 10 for books, 30 for authors/publishers)
+# - search: Search term (searches in multiple fields)
+# - sortBy: Field to sort by (id, name, title, createdAt, publishedYear)
+# - sortOrder: Sort direction (asc, desc)
+
+# Books specific filters:
+# - authorId: Filter by author ID
+# - publisherId: Filter by publisher ID
+# - publishedYear: Year range filter (format: min,max)
+# - title: Filter by title (partial match)
+
+# Authors specific filters:
+# - name: Filter by name (partial match)
+
+# Publishers specific filters:
+# - name: Filter by name (partial match)
+# - address: Filter by address (partial match)
+
+### ===========================================
+### RESPONSE FORMAT EXAMPLES
+### ===========================================
+
+# Success Response Format:
+# {
+#   "success": true,
+#   "message": "Operation successful",
+#   "data": { ... },
+#   "pagination": { ... }, // Only for list endpoints
+#   "timestamp": "2024-01-01T00:00:00.000Z"
+# }
+
+# Error Response Format:
+# {
+#   "success": false,
+#   "message": "Error description",
+#   "errors": [...], // Optional validation errors
+#   "timestamp": "2024-01-01T00:00:00.000Z"
+# }
+
+### ===========================================
+### TESTING CHECKLIST
+### ===========================================
+
+# ✅ Health Check
+# ✅ Authentication (Login/Logout/Profile)
+# ✅ Books CRUD Operations
+# ✅ Authors CRUD Operations  
+# ✅ Publishers CRUD Operations
+# ✅ Search Functionality
+# ✅ Filtering & Sorting
+# ✅ Pagination
+# ✅ Error Handling
+# ✅ Validation
+# ✅ Security (SQL Injection, XSS)
+# ✅ Performance (Large datasets)
+# ✅ Edge Cases (Invalid IDs, Empty data)

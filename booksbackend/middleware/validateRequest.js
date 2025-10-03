@@ -1,3 +1,5 @@
+import { validationErrorResponse } from "../utils/responseFormatter.js";
+
 const validateRequest = (schema) => {
   return (req, res, next) => {
     const { error } = schema.validate(req.body, {
@@ -12,11 +14,7 @@ const validateRequest = (schema) => {
         message: err.message.replace(/['"]/g, ""),
       }));
 
-      return res.status(400).json({
-        status: "error",
-        message: "Validation failed",
-        errors,
-      });
+      return validationErrorResponse(res, errors, "Validation failed");
     }
 
     next();

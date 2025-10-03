@@ -15,8 +15,10 @@ import {
 
 const router = express.Router();
 
+// Apply authentication to all publisher routes
 router.use(authenticate);
 
+// Publisher routes with validation
 router.get("/", getPublishers);
 router.get("/:id", getPublisherById);
 router.post("/", validateRequest(createPublisherSchema), createPublisher);

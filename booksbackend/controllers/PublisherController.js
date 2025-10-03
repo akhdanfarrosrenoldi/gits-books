@@ -1,102 +1,237 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "../config/database.js";
+import { 
+  successResponse, 
+  successResponseWithPagination, 
+  errorResponse, 
+  notFoundResponse 
+} from "../utils/responseFormatter.js";
+import { buildCompleteQuery, calculatePagination } from "../utils/queryHelper.js";
+import { asyncHandler } from "../middleware/errorHandler.js";
+import logger from "../middleware/logger.js";
 
-// Get all publishers with pagination
-export const getPublishers = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 30;
-    const skip = (page - 1) * limit;
+// Get all publishers with pagination, search, filter, and sort
+export const getPublishers = asyncHandler(async (req, res) => {
+  const queryConfig = {
+    searchFields: ['name', 'address'],
+    allowedSortFields: ['id', 'name', 'createdAt'],
+    allowedFilters: {
+      name: { type: 'string' },
+      address: { type: 'string' }
+    }
+  };
 
-    const [publishers, totalItems] = await Promise.all([
-      prisma.publisher.findMany({
-        skip,
-        take: limit,
-        include: {
-          books: true,
+  const { page, limit, skip, take, orderBy, where } = buildCompleteQuery(req, queryConfig);
+
+  logger.info("Publishers query", { 
+    page, 
+    limit, 
+    search: req.query.search,
+    filters: where,
+    sort: orderBy,
+    userId: req.user?.userId 
+  });
+
+  const [publishers, totalItems] = await Promise.all([
+    prisma.publisher.findMany({
+      skip,
+      take,
+      where,
+      include: {
+        books: {
+          select: { id: true, title: true, publishedYear: true }
         },
-      }),
-      prisma.publisher.count(),
-    ]);
-
-    const totalPages = Math.ceil(totalItems / limit);
-
-    res.status(200).json({
-      data: publishers,
-      pagination: {
-        totalItems,
-        totalPages,
-        currentPage: page,
-        perPage: limit,
+        _count: {
+          select: { books: true }
+        }
       },
-    });
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
+      orderBy,
+    }),
+    prisma.publisher.count({ where }),
+  ]);
+
+  const pagination = calculatePagination(totalItems, page, limit);
+
+  if (page > pagination.totalPages && totalItems > 0) {
+    return notFoundResponse(res, "This page does not exist");
   }
-};
+
+  return successResponseWithPagination(
+    res, 
+    publishers, 
+    pagination, 
+    `Found ${totalItems} publishers`
+  );
+});
 
 // Get publisher by ID
-export const getPublisherById = async (req, res) => {
-  try {
-    const response = await prisma.publisher.findUnique({
-      where: { id: Number(req.params.id) },
-      include: {
-        books: true,
-      },
-    });
+export const getPublisherById = asyncHandler(async (req, res) => {
+  const publisherId = Number(req.params.id);
 
-    if (!response) {
-      return res.status(404).json({ msg: "Publisher not found" });
-    }
-
-    res.status(200).json(response);
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
+  if (isNaN(publisherId)) {
+    return errorResponse(res, "Invalid publisher ID", 400);
   }
-};
+
+  const publisher = await prisma.publisher.findUnique({
+    where: { id: publisherId },
+    include: {
+      books: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          publishedYear: true,
+          author: {
+            select: { id: true, name: true }
+          }
+        }
+      },
+      _count: {
+        select: { books: true }
+      }
+    },
+  });
+
+  if (!publisher) {
+    return notFoundResponse(res, "Publisher not found");
+  }
+
+  logger.info("Publisher retrieved", { publisherId, userId: req.user?.userId });
+
+  return successResponse(res, publisher, "Publisher retrieved successfully");
+});
 
 // Create new publisher
-export const createPublisher = async (req, res) => {
-  try {
-    const { name, address } = req.body;
+export const createPublisher = asyncHandler(async (req, res) => {
+  const { name, address } = req.body;
 
-    const newPublisher = await prisma.publisher.create({
-      data: {
-        name,
-        address,
-      },
-    });
+  // Check if publisher with same name already exists
+  const existingPublisher = await prisma.publisher.findFirst({
+    where: {
+      name: {
+        equals: name
+      }
+    }
+  });
 
-    res.status(201).json(newPublisher);
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
+  if (existingPublisher) {
+    return errorResponse(res, "Publisher with this name already exists", 409);
   }
-};
+
+  const newPublisher = await prisma.publisher.create({
+    data: {
+      name,
+      address,
+    },
+    include: {
+      _count: {
+        select: { books: true }
+      }
+    }
+  });
+
+  logger.info("Publisher created", { 
+    publisherId: newPublisher.id, 
+    name: newPublisher.name,
+    userId: req.user?.userId 
+  });
+
+  return successResponse(res, newPublisher, "Publisher created successfully", 201);
+});
 
 // Update publisher
-export const updatePublisher = async (req, res) => {
-  try {
-    const { name, address } = req.body;
+export const updatePublisher = asyncHandler(async (req, res) => {
+  const publisherId = Number(req.params.id);
+  const { name, address } = req.body;
 
-    const updatedPublisher = await prisma.publisher.update({
-      where: { id: Number(req.params.id) },
-      data: { name, address },
+  if (isNaN(publisherId)) {
+    return errorResponse(res, "Invalid publisher ID", 400);
+  }
+
+  // Check if publisher exists
+  const existingPublisher = await prisma.publisher.findUnique({ where: { id: publisherId } });
+  if (!existingPublisher) {
+    return notFoundResponse(res, "Publisher not found");
+  }
+
+  // Check if another publisher with same name exists (excluding current publisher)
+  if (name && name !== existingPublisher.name) {
+    const duplicatePublisher = await prisma.publisher.findFirst({
+      where: {
+        name: {
+          equals: name
+        },
+        id: {
+          not: publisherId
+        }
+      }
     });
 
-    res.status(200).json(updatedPublisher);
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
+    if (duplicatePublisher) {
+      return errorResponse(res, "Publisher with this name already exists", 409);
+    }
   }
-};
+
+  const updatedPublisher = await prisma.publisher.update({
+    where: { id: publisherId },
+    data: { name, address },
+    include: {
+      _count: {
+        select: { books: true }
+      }
+    }
+  });
+
+  logger.info("Publisher updated", { 
+    publisherId, 
+    name: updatedPublisher.name,
+    userId: req.user?.userId 
+  });
+
+  return successResponse(res, updatedPublisher, "Publisher updated successfully");
+});
 
 // Delete publisher
-export const deletePublisher = async (req, res) => {
-  try {
-    await prisma.publisher.delete({
-      where: { id: Number(req.params.id) },
-    });
-    res.status(200).json({ msg: "Publisher deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
+export const deletePublisher = asyncHandler(async (req, res) => {
+  const publisherId = Number(req.params.id);
+
+  if (isNaN(publisherId)) {
+    return errorResponse(res, "Invalid publisher ID", 400);
   }
-};
+
+  // Check if publisher exists and get book count
+  const existingPublisher = await prisma.publisher.findUnique({ 
+    where: { id: publisherId },
+    select: { 
+      id: true, 
+      name: true,
+      _count: {
+        select: { books: true }
+      }
+    }
+  });
+  
+  if (!existingPublisher) {
+    return notFoundResponse(res, "Publisher not found");
+  }
+
+  // Check if publisher has books
+  if (existingPublisher._count.books > 0) {
+    return errorResponse(
+      res, 
+      `Cannot delete publisher. Publisher has ${existingPublisher._count.books} book(s) associated.`, 
+      400
+    );
+  }
+
+  await prisma.publisher.delete({
+    where: { id: publisherId },
+  });
+
+  logger.info("Publisher deleted", { 
+    publisherId, 
+    name: existingPublisher.name,
+    userId: req.user?.userId 
+  });
+
+  return successResponse(res, null, "Publisher deleted successfully");
+});

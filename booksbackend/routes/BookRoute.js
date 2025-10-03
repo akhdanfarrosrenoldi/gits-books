@@ -15,8 +15,10 @@ import {
 
 const router = express.Router();
 
+// Apply authentication to all book routes
 router.use(authenticate);
 
+// Book routes with validation
 router.get("/", getBooks);
 router.get("/:id", getBookById);
 router.post("/", validateRequest(createBookSchema), createBook);
