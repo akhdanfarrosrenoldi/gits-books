@@ -6,7 +6,7 @@ import useSWR, { useSWRConfig } from "swr";
 const AuthorList = () => {
   const { mutate } = useSWRConfig();
   const [page, setPage] = useState(1);
-  const limit = 5; // tampilkan 5 author per halaman
+  const limit = 5;
 
   const fetcher = async (url) => {
     const response = await axiosInstance.get(url);
@@ -17,7 +17,7 @@ const AuthorList = () => {
 
   if (!data) return <h2>Loading...</h2>;
 
-  const authors = data.data; // ambil array authors
+  const authors = data.data;
   const totalPages = data.pagination.totalPages;
 
   const deleteAuthor = async (authorId) => {
@@ -78,7 +78,6 @@ const AuthorList = () => {
         </tbody>
       </table>
 
-      {/* Pagination */}
       <nav aria-label="Page navigation" className="mt-4">
         <ul className="inline-flex -space-x-px text-sm">
           <li>

@@ -50,7 +50,6 @@ const AddBook = () => {
   return (
     <div className="max-w-lg mx-auto p-4 bg-white rounded-lg shadow-md">
       <form onSubmit={saveBook}>
-        {/* Book Name */}
         <div className="mb-6">
           <label
             htmlFor="title"
@@ -69,7 +68,6 @@ const AddBook = () => {
           />
         </div>
 
-        {/* Description */}
         <div className="mb-6">
           <label
             htmlFor="description"
@@ -87,7 +85,6 @@ const AddBook = () => {
           />
         </div>
 
-        {/* Published Year */}
         <div className="mb-6">
           <label
             htmlFor="publishedYear"
@@ -105,7 +102,6 @@ const AddBook = () => {
           />
         </div>
 
-        {/* Author */}
         <div className="mb-6">
           <label
             htmlFor="author"
@@ -128,7 +124,6 @@ const AddBook = () => {
           </select>
         </div>
 
-        {/* Publisher */}
         <div className="mb-6">
           <label
             htmlFor="publisher"
@@ -151,7 +146,6 @@ const AddBook = () => {
           </select>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"

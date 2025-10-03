@@ -17,7 +17,7 @@ const BookList = () => {
   if (!data) return <h2>Loading...</h2>;
 
   const books = data.data;
-  const totalPages = data.totalPages;
+  const totalPages = data.pagination.totalPages;
 
   const deleteBook = async (bookId) => {
     await axiosInstance.delete(`/books/${bookId}`);

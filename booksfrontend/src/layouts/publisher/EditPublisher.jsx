@@ -38,7 +38,6 @@ const EditPublisher = () => {
   return (
     <div className="max-w-lg mx-auto p-4 bg-white rounded-lg shadow-md">
       <form onSubmit={updatePublisher}>
-        {/* Publisher Name */}
         <div className="mb-6">
           <label
             htmlFor="name"
@@ -73,7 +72,6 @@ const EditPublisher = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"

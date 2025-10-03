@@ -4,9 +4,8 @@ const prisma = new PrismaClient();
 // Get all publishers with pagination
 export const getPublishers = async (req, res) => {
   try {
-    // ambil query params ?page=1&limit=5
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
     const [publishers, totalItems] = await Promise.all([
@@ -17,7 +16,7 @@ export const getPublishers = async (req, res) => {
           books: true,
         },
       }),
-      prisma.publisher.count(), // total data publisher
+      prisma.publisher.count(),
     ]);
 
     const totalPages = Math.ceil(totalItems / limit);

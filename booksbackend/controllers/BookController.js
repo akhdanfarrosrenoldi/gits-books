@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // Get all books with pagination
-// Get all books with pagination
 export const getBooks = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -24,7 +23,6 @@ export const getBooks = async (req, res) => {
 
     const totalPages = Math.ceil(totalItems / limit);
 
-    // kalau page lebih besar dari totalPages
     if (page > totalPages && totalItems > 0) {
       return res.status(404).json({ msg: "This page does not exist" });
     }
