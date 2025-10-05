@@ -2,6 +2,10 @@
 
 A comprehensive full-stack web application for managing books, authors, and publishers with advanced search, filtering, and sorting capabilities.
 
+ERD
+
+https://docs.google.com/document/d/1XyXhklXxU8gsDIKrvoauH-Kz9m3k31n_E16SJK483d4/edit?tab=t.0
+
 ## 🚀 Tech Stack
 
 ### Backend
@@ -164,6 +168,7 @@ gits-books/
 - **Robust Error Handling** - Prisma/MySQL specific errors
 
 #### **Frontend (React.js + SWR + Tailwind)**
+
 - **Component-Based Architecture** - Reusable UI components (SearchFilter, Pagination)
 - **Modular Route Management** - Organized routes by feature modules
 - **Smart Data Fetching** - SWR with caching & optimistic updates
@@ -173,6 +178,7 @@ gits-books/
 - **Optimized Performance** - Memoization, pagination, smooth UX
 
 #### **Documentation & Security**
+
 - **Complete API Documentation** - All endpoints documented
 - **Secure Postman Collection** - Environment variables, no hardcoded secrets
 - **Security Guidelines** - Production deployment checklist
